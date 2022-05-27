@@ -65,7 +65,7 @@ class interface2driver(Node):
         # ADC initialize
         self.adc = Adc()
         #self.adc_pub =  rospy.Publisher(TOPIC["adc_topic"],adc_msg, queue_size=3) 
-        self.adc_pub = self.create_publisher(ADCMsg, 'adv_topic', 10)
+        self.adc_pub = self.create_publisher(ADCMsg, 'adc_topic', 10)
 
         #======================
         # service 
