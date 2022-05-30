@@ -1,0 +1,19 @@
+launch:
+
+# Launch State and Joint Publishers
+- include:
+  file: freenove_base/launch/statejointpub.launch.py
+
+# Launch YDLidar X4 Driver
+- include:
+  file: ydlidar_ros2_driver/launch/ylidar.py
+  params_file: /hammerhead_description/ydlidar.yaml #this might be wrong
+
+# Run Kinect Driver
+
+# May put IMU in, would Run IMU Driver here
+
+# Run Freenove Interface2Driver
+- node:
+  pkg: "freenove_base"
+  exec: "interface2driver"

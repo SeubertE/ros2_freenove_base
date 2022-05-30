@@ -4,7 +4,7 @@ import launch_ros
 import os
 
 def generate_launch_description():
-    pkg_share = launch_ros.substitutions.FindPackageShare(package='freenove_base').find('freenove_base')
+    pkg_share = launch_ros.substitutions.FindPackageShare(package='hammerhead_description').find('hammerhead_description')
     default_model_path = os.path.join(pkg_share, 'hammerhead.urdf')
     default_rviz_config_path = os.path.join(pkg_share, 'urdf_config.rviz')
 
@@ -25,13 +25,6 @@ def generate_launch_description():
         name='joint_state_publisher_gui',
         condition=launch.conditions.IfCondition(LaunchConfiguration('gui'))
     )
-    rviz_node = launch_ros.actions.Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        output='screen',
-        arguments=['-d', LaunchConfiguration('rvizconfig')],
-    )
 
     return launch.LaunchDescription([
         launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
@@ -42,6 +35,5 @@ def generate_launch_description():
                                             description='Absolute path to rviz config file'),
         joint_state_publisher_node,
         joint_state_publisher_gui_node,
-        robot_state_publisher_node,
-        rviz_node
+        robot_state_publisher_node
     ])
