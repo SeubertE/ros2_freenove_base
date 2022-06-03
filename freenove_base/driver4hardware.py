@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import time
 import smbus
+import sys
+from Adafruit_BNO055 import BNO055
 from time import sleep
 import RPi.GPIO as GPIO
 from rpi_ws281x import *
@@ -276,4 +278,48 @@ class Led:
             self.strip.setPixelColorRGB(led, r, g, b)
             self.strip.show()
 
+# From Adafruit simpletest.py
+class IMU:
+    def __init__(self):
+        self.bno = BNO055.BNO055(serial_port='/dev/serial0', rst=18)
         
+        if not self.bno.begin():
+            raise RuntimeError('Failed to initialize BNO055! Is the sensor connected?')
+
+    def getStatus(self):
+        status, self_test, error = self.bno.get_system_status()
+        print('System status: {0}'.format(status))
+        print('Self test result (0x0F is normal): 0x{0:02X}'.format(self_test))
+        # Print out an error if system status is in error mode.
+        if status == 0x01:
+            print('System error: {0}'.format(error))
+            print('See datasheet section 4.3.59 for the meaning.')
+
+    def read(self):
+        # Read the Euler angles for heading, roll, pitch (all in degrees).
+        heading, roll, pitch = self.bno.read_euler()
+        # Read the calibration status, 0=uncalibrated and 3=fully calibrated.
+        sys, gyro, accel, mag = self.bno.get_calibration_status()
+
+        # Orientation as a quaternion:
+        x,y,z,w = self.bno.read_quaterion()
+        
+        # Sensor temperature in degrees Celsius:
+        temp_c = self.bno.read_temp()
+        
+        # Magnetometer data (in micro-Teslas):
+        x,y,z = self.bno.read_magnetometer()
+        
+        # Gyroscope data (in degrees per second):
+        x,y,z = self.bno.read_gyroscope()
+        
+        # Accelerometer data (in meters per second squared):
+        x,y,z = self.bno.read_accelerometer()
+        
+        # Linear acceleration data (i.e. acceleration from movement, not gravity--
+        # returned in meters per second squared):
+        x,y,z = self.bno.read_linear_acceleration()
+        
+        # Gravity acceleration data (i.e. acceleration just from gravity--returned
+        # in meters per second squared):
+        x,y,z = self.bno.read_gravity()

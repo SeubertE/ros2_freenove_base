@@ -1,0 +1,122 @@
+### ekf config file ###
+ekf_filter_node:
+    ros__parameters:
+
+        map_frame: map              # Defaults to "map" if unspecified
+        odom_frame: odom            # Defaults to "odom" if unspecified
+        base_link_frame: base_link  # Defaults to "base_link" if unspecified
+        world_frame: odom           # Defaults to the value of odom_frame if unspecified
+
+
+        # odom0: odom0_topic/odom # Fill in the correct topic here!
+        # odom1: odom1_topic/odom # Make sure it's of the correct message type!
+
+        #pose0: pose0_topic/pose # Same-same
+        # pose1: pose1_topic/pose
+
+        #twist0: twist0_topic # But different
+        # twist1: twist1_topic
+
+        imu0: imu # But STILL same
+        # imu1: imu1_topic
+        
+        # [x_pos   , y_pos    , z_pos,
+        #  roll    , pitch    , yaw,
+        #  x_vel   , y_vel    , z_vel,
+        #  roll_vel, pitch_vel, yaw_vel,
+        #  x_accel , y_accel  , z_accel]
+
+        imu0_config: [true,  true,  true,
+               true, true, true,
+               true, true, true,
+               true, true, true,
+               true, true, true]
+
+# [ADVANCED] The process noise covariance matrix can be difficult to tune, and can vary for each application, so it is exposed as a configuration parameter. This matrix represents the noise we add to the total error after each prediction step. 
+
+# The better the omnidirectional motion model matches your system, the smaller these values can be. However, if users find that a given variable is slow to converge, one approach is to increase the process_noise_covariance diagonal value for the variable in question, which will cause the filter's predicted error to be larger, which will cause the filter to trust the incoming measurement more during correction. 
+
+# The values are ordered as x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az. 
+# Defaults to the matrix below if unspecified.
+
+        process_noise_covariance: [0.05, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0.05, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0.06, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0.03, 0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0.03, 0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0.06, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0.025, 0,     0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0.025, 0,    0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0.04, 0,    0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0.01, 0,    0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.01, 0,    0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.02, 0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.01, 0,    0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.01, 0,
+                                0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.015]
+
+# [ADVANCED] This represents the initial value for the state estimate error covariance matrix. Setting a diagonal value (variance) to a large value will result in rapid convergence for initial measurements of the variable in question. Users should take care not to use large values for variables that will not be measured directly. 
+
+# The values are ordered as x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az.
+# Defaults to the matrix below if unspecified.
+
+        initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    1e-9, 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    1e-9, 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    1e-9, 0,    0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    1e-9, 0,    0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    1e-9, 0,    0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    1e-9, 0,     0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    1e-9,  0,     0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1e-9,  0,     0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1e-9,  0,    0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
+                                0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]
+
+        two_d_mode: true
+
+# The frequency, in Hz, at which the filter will output a position estimate. Note that the filter will not begin
+# computation until it receives at least one message from one of the inputs. It will then run continuously at the
+# frequency specified here, regardless of whether it receives more measurements. Defaults to 30 if unspecified.
+        frequency: 30
+
+# The period, in seconds, after which we consider a sensor to have timed out. In this event, we carry out a predict
+# cycle on the EKF without correcting it. This parameter can be thought of as the minimum frequency with which the
+# filter will generate new output. Defaults to 1 / frequency if not specified.
+        sensor_timeout: 0.1
+
+# ekf_localization_node and ukf_localization_node both use a 3D omnidirectional motion model. If this parameter is
+# set to true, no 3D information will be used in your state estimate. Use this if you are operating in a planar
+# environment and want to ignore the effect of small variations in the ground plane that might otherwise be detected
+# by, for example, an IMU. Defaults to false if unspecified.
+        two_d_mode: false
+
+# Use this parameter to provide an offset to the transform generated by ekf_localization_node. This can be used for
+# future dating the transform, which is required for interaction with some other packages. Defaults to 0.0 if
+# unspecified.
+        transform_time_offset: 0.0
+
+# Use this parameter to provide specify how long the tf listener should wait for a transform to become available. 
+# Defaults to 0.0 if unspecified.
+        transform_timeout: 0.0
+
+# If you're having trouble, try setting this to true, and then echo the /diagnostics_agg topic to see if the node is
+# unhappy with any settings or data.
+        print_diagnostics: true
+
+# Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file specified by
+# debug_out_file. I hope you like matrices! Please note that setting this to true will have strongly deleterious
+# effects on the performance of the node. Defaults to false if unspecified.
+        debug: false
+
+# Defaults to "robot_localization_debug.txt" if unspecified. Please specify the full path.
+        #debug_out_file: /path/to/debug/file.txt
+
+# Whether to broadcast the transformation over the /tf topic. Defaults to true if unspecified.
+        publish_tf: true
+
+# Whether to publish the acceleration state. Defaults to false if unspecified.
+        publish_acceleration: false
